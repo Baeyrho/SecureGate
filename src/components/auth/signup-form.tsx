@@ -66,15 +66,19 @@ export function SignupForm() {
       <h1 className="text-2xl font-bold text-gray-900 mb-2">Create an account</h1>
       <p className="text-gray-500 mb-8">Join SecureGate today.</p>
 
-      {error && (
-        <div className="p-3 mb-6 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm">
-          {error}
-        </div>
-      )}
+      {(error || success) && (
+        <div className="mb-6">
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
 
-      {success && (
-        <div className="p-3 mb-6 bg-green-50 border border-green-100 text-green-600 rounded-lg text-sm">
-          {success}
+          {success && (
+            <div className="p-3 bg-green-50 border border-green-100 text-green-600 rounded-lg text-sm">
+              {success}
+            </div>
+          )}
         </div>
       )}
 

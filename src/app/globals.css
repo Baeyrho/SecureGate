@@ -15,7 +15,7 @@ body {
 }
 
 .auth-card {
-  @apply w-full max-w-md px-2 md:px-8 py-8;
+  @apply w-full max-w-md px-2 md:px-8 pt-8 pb-8 md:pt-16 md:pb-10;
 }
 
 .input-field {

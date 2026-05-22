@@ -28,6 +28,10 @@ export default auth(async (req) => {
 
     if (isAuthRoute) {
       if (isLoggedIn) {
+        const mode = nextUrl.searchParams.get("mode");
+        if (mode === "verify-pending" || mode === "forgot-password") {
+          return NextResponse.next();
+        }
         return NextResponse.redirect(new URL("/dashboard", nextUrl));
       }
       return NextResponse.next();
@@ -35,10 +39,6 @@ export default auth(async (req) => {
 
     if (!isLoggedIn && !isPublicRoute) {
       return NextResponse.redirect(new URL("/auth?mode=login", nextUrl));
-    }
-
-    if (isLoggedIn && !req.auth?.user?.emailVerified && nextUrl.pathname === "/dashboard") {
-      return NextResponse.redirect(new URL("/auth?mode=verify-pending", nextUrl));
     }
 
     return NextResponse.next();
