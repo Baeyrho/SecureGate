@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginInput } from "@/schemas/auth";
@@ -11,7 +11,6 @@ import { PasswordInput } from "@/components/password-input";
 
 export function LoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
@@ -65,11 +64,6 @@ export function LoginForm() {
         </div>
       )}
 
-      {searchParams.get("verified") && (
-        <div className="p-3 mb-6 bg-green-50 border border-green-100 text-green-600 rounded-lg text-sm">
-          Email verified! You can now log in.
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>

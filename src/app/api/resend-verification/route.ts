@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const verificationToken = await createVerificationToken(email);
 
     try {
-      await sendVerificationEmail(email, verificationToken);
+      await sendVerificationEmail(email, user.name, verificationToken);
     } catch {
       console.error("RESEND_VERIFICATION_EMAIL_FAILED", email);
     }

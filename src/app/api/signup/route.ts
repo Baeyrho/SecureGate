@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
     // Email send failure should not block signup — user can resend
     try {
-      await sendVerificationEmail(email, verificationToken);
+      await sendVerificationEmail(email, name, verificationToken);
     } catch {
       console.error("SIGNUP_EMAIL_FAILED", email);
     }

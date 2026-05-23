@@ -53,6 +53,7 @@ export function SignupForm() {
         throw new Error(result.error || "Failed to sign up");
       }
 
+      localStorage.setItem("pendingVerification", JSON.stringify({ email: data.email, password: data.password }));
       setSuccess(result.success);
     } catch (err: any) {
       setError(err.message);

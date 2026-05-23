@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 interface VerifyEmailFormProps {
@@ -28,7 +29,19 @@ export function VerifyEmailForm({ token }: VerifyEmailFormProps) {
       if (response.ok) {
         setStatus("success");
         setMessage(result.success);
-        setTimeout(() => router.push("/auth?mode=login&verified=true"), 3000);
+
+        const stored = localStorage.getItem("pendingVerification");
+        if (stored) {
+          const { email, password } = JSON.parse(stored);
+          const signInResult = await signIn("credentials", { email, password, redirect: false });
+          if (!signInResult?.error) {
+            localStorage.removeItem("pendingVerification");
+            setTimeout(() => router.push("/dashboard"), 2000);
+            return;
+          }
+        }
+
+        setTimeout(() => router.push("/auth?mode=login"), 3000);
       } else {
         setStatus("error");
         setMessage(result.error);
@@ -74,7 +87,7 @@ export function VerifyEmailForm({ token }: VerifyEmailFormProps) {
       </div>
 
       {status === "success" && (
-        <p className="text-gray-500">Redirecting you to login...</p>
+        <p className="text-gray-500">Redirecting you to dashboard...</p>
       )}
 
       {status === "error" && (

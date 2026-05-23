@@ -25,7 +25,7 @@ export default async function DashboardPage() {
   }).format(user.createdAt);
 
   return (
-    <div className="w-full max-w-4xl px-2 md:px-8 pt-8 pb-8 md:pt-24 animate-fade-in">
+    <div className="w-full max-w-4xl px-2 md:px-8 pt-8 pb-8 md:pt-[184px] animate-fade-in">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-8 border-b border-gray-100">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
