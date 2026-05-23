@@ -12,7 +12,7 @@ export default auth(async (req) => {
     const isPublicRoute = ["/", "/auth"].includes(nextUrl.pathname);
     const isAuthRoute = nextUrl.pathname === "/auth" || nextUrl.pathname === "/";
 
-    if (nextUrl.pathname === "/api/auth/callback/credentials" && req.method === "POST") {
+    if (nextUrl.pathname.startsWith("/api/auth") && req.method === "POST") {
       try {
         const ip = req.headers.get("x-forwarded-for") ?? "127.0.0.1";
         const { success } = await ratelimit.limit(`login_${ip}`);

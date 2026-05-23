@@ -4,6 +4,36 @@ import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { loginSchema } from "@/schemas/auth";
 
+async function authorizeWithPassword(credentials: Record<string, unknown>) {
+  const validatedFields = loginSchema.safeParse(credentials);
+
+  if (!validatedFields.success) return null;
+
+  const { email, password } = validatedFields.data;
+
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user || !user.password) return null;
+
+  const passwordsMatch = await compare(password, user.password);
+  return passwordsMatch ? user : null;
+}
+
+async function authorizeWithVerifyToken(token: string, email: string) {
+  const stored = await prisma.verificationToken.findUnique({
+    where: { token },
+  });
+
+  if (!stored || stored.identifier !== email || stored.expires <= new Date()) {
+    return null;
+  }
+
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user?.emailVerified) return null;
+
+  await prisma.verificationToken.delete({ where: { token } });
+  return user;
+}
+
 export const { 
   handlers: { GET, POST }, 
   auth, 
@@ -19,44 +49,13 @@ export const {
   providers: [
     Credentials({
       async authorize(credentials) {
-        const { verifyToken, email } = credentials as Record<string, string>;
+        const raw = credentials as Record<string, string>;
 
-        if (verifyToken && email) {
-          const token = await prisma.verificationToken.findUnique({
-            where: { token: verifyToken },
-          });
-
-          if (token && token.identifier === email && token.expires > new Date()) {
-            const user = await prisma.user.findUnique({
-              where: { email },
-            });
-
-            if (user?.emailVerified) {
-              await prisma.verificationToken.delete({ where: { token: verifyToken } });
-              return user;
-            }
-          }
-
-          return null;
+        if (raw.verifyToken && raw.email) {
+          return authorizeWithVerifyToken(raw.verifyToken, raw.email);
         }
 
-        const validatedFields = loginSchema.safeParse(credentials);
-
-        if (validatedFields.success) {
-          const { email, password } = validatedFields.data;
-
-          const user = await prisma.user.findUnique({
-            where: { email },
-          });
-
-          if (!user || !user.password) return null;
-
-          const passwordsMatch = await compare(password, user.password);
-
-          if (passwordsMatch) return user;
-        }
-
-        return null;
+        return authorizeWithPassword(credentials);
       },
     }),
   ],
@@ -65,18 +64,7 @@ export const {
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
-      
-      if (session.user) {
-        session.user.emailVerified = (token.emailVerified as Date | null) ?? null;
-      }
-
       return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.emailVerified = (user as any).emailVerified;
-      }
-      return token;
     },
   },
 });
