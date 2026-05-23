@@ -23,6 +23,4 @@ export function getAuthModeConfig(mode: string): AuthModeConfig | undefined {
   return authModes[mode];
 }
 
-export function getAllAuthModes(): string[] {
-  return Object.keys(authModes);
-}
+

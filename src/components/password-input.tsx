@@ -25,7 +25,7 @@ export function PasswordInput({ register, placeholder = "•••••••�
         type="button"
         onClick={() => setShow(!show)}
         className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-400 hover:text-gray-600 uppercase tracking-wider"
-        tabIndex={-1}
+        aria-label={show ? "Hide password" : "Show password"}
       >
         {show ? "Hide" : "Show"}
       </button>

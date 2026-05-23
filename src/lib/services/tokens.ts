@@ -40,14 +40,6 @@ export async function findVerificationToken(token: string) {
   return prisma.verificationToken.findUnique({ where: { token } });
 }
 
-export async function deleteVerificationToken(token: string) {
-  await prisma.verificationToken.delete({ where: { token } });
-}
-
 export async function findPasswordResetToken(token: string) {
   return prisma.passwordResetToken.findUnique({ where: { token } });
-}
-
-export async function deletePasswordResetToken(token: string) {
-  await prisma.passwordResetToken.delete({ where: { token } });
 }

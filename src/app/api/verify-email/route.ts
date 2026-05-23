@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { findVerificationToken } from "@/lib/services/tokens";
-import { verifyEmailWithTokenCleanup, findUserByEmail } from "@/lib/services/users";
+import { verifyEmailWithTokenExtension, findUserByEmail } from "@/lib/services/users";
 
 export async function POST(req: Request) {
   try {
@@ -28,9 +28,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    await verifyEmailWithTokenCleanup(user.id, token);
+    await verifyEmailWithTokenExtension(user.id, token);
 
-    return NextResponse.json({ success: "Email verified successfully" }, { status: 200 });
+    return NextResponse.json({ success: "Email verified successfully", email: user.email }, { status: 200 });
   } catch (error) {
     console.error("VERIFY_EMAIL_ERROR", error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });

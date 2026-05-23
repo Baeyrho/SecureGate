@@ -19,6 +19,27 @@ export const {
   providers: [
     Credentials({
       async authorize(credentials) {
+        const { verifyToken, email } = credentials as Record<string, string>;
+
+        if (verifyToken && email) {
+          const token = await prisma.verificationToken.findUnique({
+            where: { token: verifyToken },
+          });
+
+          if (token && token.identifier === email && token.expires > new Date()) {
+            const user = await prisma.user.findUnique({
+              where: { email },
+            });
+
+            if (user?.emailVerified) {
+              await prisma.verificationToken.delete({ where: { token: verifyToken } });
+              return user;
+            }
+          }
+
+          return null;
+        }
+
         const validatedFields = loginSchema.safeParse(credentials);
 
         if (validatedFields.success) {

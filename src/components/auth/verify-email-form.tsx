@@ -30,12 +30,10 @@ export function VerifyEmailForm({ token }: VerifyEmailFormProps) {
         setStatus("success");
         setMessage(result.success);
 
-        const stored = localStorage.getItem("pendingVerification");
-        if (stored) {
-          const { email, password } = JSON.parse(stored);
-          const signInResult = await signIn("credentials", { email, password, redirect: false });
+        const email = result.email;
+        if (email) {
+          const signInResult = await signIn("credentials", { email, verifyToken: token, redirect: false });
           if (!signInResult?.error) {
-            localStorage.removeItem("pendingVerification");
             setTimeout(() => router.push("/dashboard"), 2000);
             return;
           }

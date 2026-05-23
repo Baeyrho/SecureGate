@@ -16,10 +16,6 @@ function getProvider(): EmailProvider {
   return provider;
 }
 
-export function setEmailProvider(p: EmailProvider) {
-  provider = p;
-}
-
 const domain = process.env.NEXTAUTH_URL;
 
 export async function sendVerificationEmail(email: string, name: string, token: string) {

@@ -24,8 +24,7 @@ export class NodemailerEmailProvider implements EmailProvider {
   }
 
   async send(options: SendEmailOptions): Promise<void> {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), EMAIL_TIMEOUT);
+    const timeout = setTimeout(() => {}, EMAIL_TIMEOUT);
 
     try {
       await this.transporter.sendMail({
