@@ -32,7 +32,9 @@ export default auth(async (req) => {
     if (isAuthRoute) {
       if (isLoggedIn) {
         const mode = nextUrl.searchParams.get("mode");
-        if (mode === "verify-pending" || mode === "forgot-password") {
+        const isExemptMode = ["verify-pending", "forgot-password", "reset-password", "verify-email"].includes(mode || "");
+        
+        if (isExemptMode) {
           return NextResponse.next();
         }
         return NextResponse.redirect(new URL("/dashboard", nextUrl));
