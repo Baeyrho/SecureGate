@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import { compare } from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { loginSchema } from "@/schemas/auth";
+import { authConfig } from "./auth.config";
 
 async function authorizeWithPassword(credentials: Record<string, unknown>) {
   const validatedFields = loginSchema.safeParse(credentials);
@@ -40,12 +41,7 @@ export const {
   signIn, 
   signOut 
 } = NextAuth({
-  pages: {
-    signIn: "/auth?mode=login",
-  },
-  session: {
-    strategy: "jwt",
-  },
+  ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -59,12 +55,4 @@ export const {
       },
     }),
   ],
-  callbacks: {
-    async session({ session, token }) {
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
-      }
-      return session;
-    },
-  },
 });
