@@ -16,7 +16,16 @@ function getProvider(): EmailProvider {
   return provider;
 }
 
-const domain = process.env.NEXTAUTH_URL;
+function getBaseUrl(): string {
+  // 1. Explicit APP_URL (set this in Vercel for your custom domain)
+  if (process.env.APP_URL) return process.env.APP_URL;
+  // 2. Vercel auto-injected URL (preview/production deployments)
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  // 3. Fallback for local development
+  return process.env.NEXTAUTH_URL || "http://localhost:3000";
+}
+
+const domain = getBaseUrl();
 
 export async function sendVerificationEmail(email: string, name: string, token: string) {
   const firstName = name.split(" ")[0];
