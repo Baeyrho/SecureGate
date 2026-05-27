@@ -37,7 +37,10 @@ export async function resetPasswordWithTokenCleanup(
   return prisma.$transaction(async (tx) => {
     await tx.user.update({
       where: { email },
-      data: { password: hashedPassword },
+      data: { 
+        password: hashedPassword,
+        emailVerified: new Date(), // Auto-verify on password reset
+      },
     });
 
     await tx.passwordResetToken.delete({ where: { token } });

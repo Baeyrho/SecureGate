@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginInput } from "@/schemas/auth";
@@ -11,6 +11,9 @@ import { PasswordInput } from "@/components/password-input";
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const resetSuccess = searchParams.get("reset") === "success";
+  
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
@@ -61,6 +64,12 @@ export function LoginForm() {
       {error && (
         <div className="p-3 mb-6 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm">
           {error}
+        </div>
+      )}
+      
+      {resetSuccess && !error && (
+        <div className="p-3 mb-6 bg-green-50 border border-green-100 text-green-600 rounded-lg text-sm">
+          Password updated successfully! You can now log in.
         </div>
       )}
 
