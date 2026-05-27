@@ -13,7 +13,7 @@ export function LoginForm() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
 
   const {
     register,
@@ -27,7 +27,7 @@ export function LoginForm() {
   const emailValue = watch("email");
   const passwordValue = watch("password");
   const isFormValid = loginSchema.safeParse({ email: emailValue, password: passwordValue }).success;
-  const isEmailInvalid = passwordTouched && emailValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+  const isEmailInvalid = emailTouched && emailValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
 
   const onSubmit = async (data: LoginInput) => {
     setIsLoading(true);
@@ -73,9 +73,10 @@ export function LoginForm() {
             type="email"
             placeholder="john@example.com"
             className="input-field"
+            onFocus={() => setEmailTouched(true)}
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-          {passwordTouched && !emailValue && !errors.email && (
+          {emailTouched && !emailValue && !errors.email && (
             <p className="text-red-500 text-xs mt-1">Email Can't Be Empty</p>
           )}
           {isEmailInvalid && (
@@ -90,7 +91,7 @@ export function LoginForm() {
               Forgot password?
             </Link>
           </div>
-          <PasswordInput register={register("password")} onFocus={() => setPasswordTouched(true)} />
+          <PasswordInput register={register("password")} />
           {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
         </div>
 

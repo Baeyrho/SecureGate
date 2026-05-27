@@ -24,17 +24,16 @@ export class NodemailerEmailProvider implements EmailProvider {
   }
 
   async send(options: SendEmailOptions): Promise<void> {
-    const timeout = setTimeout(() => {}, EMAIL_TIMEOUT);
-
-    try {
-      await this.transporter.sendMail({
+    await Promise.race([
+      this.transporter.sendMail({
         from: this.from,
         to: options.to,
         subject: options.subject,
         html: options.html,
-      });
-    } finally {
-      clearTimeout(timeout);
-    }
+      }),
+      new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Email send timed out")), EMAIL_TIMEOUT)
+      ),
+    ]);
   }
 }

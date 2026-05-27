@@ -35,10 +35,12 @@ export const PasswordStrength = ({ password = "" }: PasswordStrengthProps) => {
     none: "bg-gray-200",
   };
 
+  const barWidth = strength === "weak" ? "33%" : strength === "fair" ? "66%" : "100%";
+
   return (
     <div className="mt-2">
       <div className="flex gap-1 h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
-        <div className={`h-full transition-all duration-300 ${strength === 'weak' || strength === 'fair' || strength === 'strong' ? colors[strength === 'fair' || strength === 'strong' ? (strength === 'strong' ? 'strong' : 'fair') : 'weak'] : ''}`} style={{ width: strength === 'weak' ? '33%' : strength === 'fair' ? '66%' : '100%' }}></div>
+        <div className={`h-full transition-all duration-300 ${colors[strength]}`} style={{ width: barWidth }}></div>
       </div>
       <p className={`text-xs mt-1 font-medium capitalize ${strength === 'weak' ? 'text-red-500' : strength === 'fair' ? 'text-yellow-600' : 'text-green-600'}`}>
         Password strength: {strength}
