@@ -34,7 +34,7 @@ export default async function DashboardPage() {
         <form action={async () => {
           "use server";
           await signOut({ redirectTo: "/auth?mode=login" });
-        }} className="w-full md:w-auto">
+        }} className="hidden md:block w-full md:w-auto">
           <button type="submit" className="w-full md:w-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors">
             Sign Out
           </button>
@@ -173,6 +173,21 @@ export default async function DashboardPage() {
             </a>
           </div>
         </div>
+      </div>
+
+      {/* Mobile Sign Out Button */}
+      <div className="mt-8 pt-8 border-t border-gray-100 md:hidden">
+        <form action={async () => {
+          "use server";
+          await signOut({ redirectTo: "/auth?mode=login" });
+        }} className="w-full">
+          <button type="submit" className="w-full px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2">
+            <svg className="w-5 h-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Sign Out
+          </button>
+        </form>
       </div>
     </div>
   );
